@@ -1,41 +1,37 @@
 'use client'
-import { useState } from 'react' ;
-import { useRouter } from 'next/navigation';
-import styles from './banner.module.css'
-import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation'
+import { useState } from 'react';
 
-export default function Banner () {
+export default function Banner() {
 
-    const covers = ['/img/cover.jpg', '/img/cover2.jpg', '/img/cover3.jpg', '/img/cover4.jpg']
-    const [index, setIndex] = useState(0)
-    const router = useRouter() 
-    const { data:session } = useSession()
+    const [index, setIndex] = useState(0);
+    const router = useRouter();
+
+    const { data:session } = useSession();
 
     return (
-        <div className={styles.banner} onClick = { () => { setIndex(index+1) } }>
-            <Image src = {covers[index%4]}
-            alt = 'cover' 
-            fill = {true}
-            priority
-            style={{ objectFit: "cover" }} 
-            />
-            <div className = {styles.bannerText}>
+        <div className="block m-[0] w-[100vw] h-[50vh] relative" onClick={() => setIndex((index+1)%4)}>
+            <Image 
+            src={`/img/cover${index==0?"":`${index+1}`}.jpg`}
+            alt="Banner"
+            fill={true}
+            style={{objectFit:"cover"}}/>
+            <div className="relative top-[50px] z-20 text-center bg-black/80 py-[20px] rounded-lg">
                 <h1 className='text-4xl font-medium'>where every event finds its venue</h1>
-                <h3 className='text-xl font-serif'>Finding the perfect venue has never been easier. Whether it's a wedding, corporate event, or private party, we connecting people to the perfect place.</h3>
+                <h3 className='text-xl font-serif' style={{marginTop:"8px"}}>Looking for the perfect venue for your next event? We offer a spacious and well-equipped venue for all types of gatherings, including weddings, corporate events, birthday parties, and more.</h3>
             </div>
             {
-                session? <div className='z-30 absolute top-5 right-10 font-semmibold text-white text-xl'>Welcome {session.user?.name}</div>
-                    : null
+                session ? <div className='z-30 absolute top-5 right-10 font-semibold text-white bg-black/80 px-[10px] rounded-[16px] py-[5px] text-xl'>Welcome {session.user?.name}</div>:null
             }
-
-            <button className='bg-white text-cyan-600 border border-cyan-600
-                font-semibold py-2 px-2 m-2 rounded z-30 absolute bottom-0 right-0
-                hover:bg-cyan-600 hover:text-white hover:border-transparent'
-                onClick= { (e) => { e.stopPropagation; router.push('/venue')}}
-                >
-                Select Your Venue NOW
+            <button className="bg-white text-cyan-600 border border-cyan-600 font-semibold py-2 px-2 m-2 rounded z-30 absolute bottom-0 right-0 hover:bg-cyan-600 hover:text-white hover:border-transparent" 
+            onClick={(e) => {
+                e.stopPropagation();
+                router.push('/venue');
+            }}>
+                Select Venue
             </button>
         </div>
-    );
+    )
 }
